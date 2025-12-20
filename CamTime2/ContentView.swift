@@ -1,24 +1,33 @@
-//
-//  ContentView.swift
-//  CamTime2
-//
-//  Created by user286406 on 12/20/25.
-//
-
 import SwiftUI
+import WidgetKit
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        VStack(spacing: 20) {
+            Text("Widget Demo App")
+                .font(.title)
+
+            Button("Update Widget") {
+                saveWidgetAppearance()
+            }
         }
         .padding()
     }
-}
 
-#Preview {
-    ContentView()
+    private func saveWidgetAppearance() {
+        let defaults = UserDefaults(suiteName: "group.com.example.camwidget2")
+
+        let appearance = CamWidgetAppearance(
+            backgroundStyle: .system,
+            accentColor: "pink",
+            fontStyle: .rounded
+        )
+
+        if let data = try? JSONEncoder().encode(appearance) {
+            defaults?.set(data, forKey: "widgetAppearance")
+        }
+
+        // Ask WidgetKit to reload timelines
+        WidgetCenter.shared.reloadAllTimelines()
+    }
 }

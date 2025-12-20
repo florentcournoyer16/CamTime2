@@ -6,14 +6,75 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		7ADEBC8D2EF733E400948FAD /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ADEBC8C2EF733E400948FAD /* WidgetKit.framework */; };
+		7ADEBC8F2EF733E400948FAD /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ADEBC8E2EF733E400948FAD /* SwiftUI.framework */; };
+		7ADEBC9A2EF733E600948FAD /* CamWidget2Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 7ADEBC8A2EF733E400948FAD /* CamWidget2Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7ADEBC982EF733E600948FAD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7ADEBC6D2EF7335E00948FAD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7ADEBC892EF733E400948FAD;
+			remoteInfo = CamWidget2Extension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7ADEBC9F2EF733E600948FAD /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7ADEBC9A2EF733E600948FAD /* CamWidget2Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		7ADEBC752EF7335E00948FAD /* CamTime2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CamTime2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7ADEBC8A2EF733E400948FAD /* CamWidget2Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CamWidget2Extension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		7ADEBC8C2EF733E400948FAD /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		7ADEBC8E2EF733E400948FAD /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		7ADEBC9B2EF733E600948FAD /* Exceptions for "CamWidget2" folder in "CamWidget2Extension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7ADEBC892EF733E400948FAD /* CamWidget2Extension */;
+		};
+		7ADEBCA12EF7350500948FAD /* Exceptions for "CamTime2" folder in "CamWidget2Extension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				WidgetAppearance.swift,
+			);
+			target = 7ADEBC892EF733E400948FAD /* CamWidget2Extension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7ADEBC772EF7335E00948FAD /* CamTime2 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7ADEBCA12EF7350500948FAD /* Exceptions for "CamTime2" folder in "CamWidget2Extension" target */,
+			);
 			path = CamTime2;
+			sourceTree = "<group>";
+		};
+		7ADEBC902EF733E400948FAD /* CamWidget2 */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7ADEBC9B2EF733E600948FAD /* Exceptions for "CamWidget2" folder in "CamWidget2Extension" target */,
+			);
+			path = CamWidget2;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -26,6 +87,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7ADEBC872EF733E400948FAD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7ADEBC8F2EF733E400948FAD /* SwiftUI.framework in Frameworks */,
+				7ADEBC8D2EF733E400948FAD /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -33,6 +103,8 @@
 			isa = PBXGroup;
 			children = (
 				7ADEBC772EF7335E00948FAD /* CamTime2 */,
+				7ADEBC902EF733E400948FAD /* CamWidget2 */,
+				7ADEBC8B2EF733E400948FAD /* Frameworks */,
 				7ADEBC762EF7335E00948FAD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,8 +113,18 @@
 			isa = PBXGroup;
 			children = (
 				7ADEBC752EF7335E00948FAD /* CamTime2.app */,
+				7ADEBC8A2EF733E400948FAD /* CamWidget2Extension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7ADEBC8B2EF733E400948FAD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7ADEBC8C2EF733E400948FAD /* WidgetKit.framework */,
+				7ADEBC8E2EF733E400948FAD /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -55,10 +137,12 @@
 				7ADEBC712EF7335E00948FAD /* Sources */,
 				7ADEBC722EF7335E00948FAD /* Frameworks */,
 				7ADEBC732EF7335E00948FAD /* Resources */,
+				7ADEBC9F2EF733E600948FAD /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				7ADEBC992EF733E600948FAD /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				7ADEBC772EF7335E00948FAD /* CamTime2 */,
@@ -69,6 +153,28 @@
 			productName = CamTime2;
 			productReference = 7ADEBC752EF7335E00948FAD /* CamTime2.app */;
 			productType = "com.apple.product-type.application";
+		};
+		7ADEBC892EF733E400948FAD /* CamWidget2Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7ADEBC9C2EF733E600948FAD /* Build configuration list for PBXNativeTarget "CamWidget2Extension" */;
+			buildPhases = (
+				7ADEBC862EF733E400948FAD /* Sources */,
+				7ADEBC872EF733E400948FAD /* Frameworks */,
+				7ADEBC882EF733E400948FAD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				7ADEBC902EF733E400948FAD /* CamWidget2 */,
+			);
+			name = CamWidget2Extension;
+			packageProductDependencies = (
+			);
+			productName = CamWidget2Extension;
+			productReference = 7ADEBC8A2EF733E400948FAD /* CamWidget2Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -81,6 +187,9 @@
 				LastUpgradeCheck = 2610;
 				TargetAttributes = {
 					7ADEBC742EF7335E00948FAD = {
+						CreatedOnToolsVersion = 26.1;
+					};
+					7ADEBC892EF733E400948FAD = {
 						CreatedOnToolsVersion = 26.1;
 					};
 				};
@@ -100,12 +209,20 @@
 			projectRoot = "";
 			targets = (
 				7ADEBC742EF7335E00948FAD /* CamTime2 */,
+				7ADEBC892EF733E400948FAD /* CamWidget2Extension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		7ADEBC732EF7335E00948FAD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7ADEBC882EF733E400948FAD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +239,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7ADEBC862EF733E400948FAD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7ADEBC992EF733E600948FAD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7ADEBC892EF733E400948FAD /* CamWidget2Extension */;
+			targetProxy = 7ADEBC982EF733E600948FAD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		7ADEBC7E2EF7335F00948FAD /* Debug */ = {
@@ -310,6 +442,66 @@
 			};
 			name = Release;
 		};
+		7ADEBC9D2EF733E600948FAD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9JNM99HSX4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CamWidget2/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CamWidget2;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = CamTime.CamTime2.CamWidget2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7ADEBC9E2EF733E600948FAD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9JNM99HSX4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CamWidget2/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CamWidget2;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = CamTime.CamTime2.CamWidget2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -327,6 +519,15 @@
 			buildConfigurations = (
 				7ADEBC812EF7335F00948FAD /* Debug */,
 				7ADEBC822EF7335F00948FAD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7ADEBC9C2EF733E600948FAD /* Build configuration list for PBXNativeTarget "CamWidget2Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7ADEBC9D2EF733E600948FAD /* Debug */,
+				7ADEBC9E2EF733E600948FAD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
