@@ -2,74 +2,65 @@ import SwiftUI
 import WidgetKit
 
 struct ContentView: View {
-    var body: some View {
 
-        WidgetAppearanceView()
-
-    }
-}
-
-
-struct WidgetAppearanceView: View {
-
-
-    @State private var accentColor: AccentColor = .pink
+    @State private var accentColor: Color = .black.opacity(0.9)
     @State private var fontStyle: FontStyle = .rounded
     @State private var backgroundColor: Color = .pink.opacity(0.2)
 
     var body: some View {
-        Form {
-
-            // Accent color
-            Section("Accent color") {
-                Picker("Accent color", selection: $accentColor) {
-                    ForEach(AccentColor.allCases, id: \.self) { color in
-                        Text(color.rawValue.capitalized)
-                    }
-                }
-                .pickerStyle(.segmented)
-            }
-
-            // Font
-            Section("Font style") {
-                Picker("Font style", selection: $fontStyle) {
-                    ForEach(FontStyle.allCases, id: \.self) { font in
-                        Text(font.rawValue.capitalized)
-                    }
-                }
-            }
-
-            // Background
-            Section("Background") {
+        NavigationStack {
+            Form {
                 
-                ColorPicker("Background tint", selection: $backgroundColor, supportsOpacity: true)
-            }
+                Section("Font style") {
+                    Picker("Font style", selection: $fontStyle) {
+                        ForEach(FontStyle.allCases, id: \.self) {
+                            Text($0.rawValue.capitalized)
+                        }
+                    }
+                }
 
-            // Apply button
-            Button("Apply to Widget") {
-                saveAppearance()
+                Section("Accent color") {
+                        ColorPicker(
+                            "Accent color",
+                            selection: $accentColor,
+                            supportsOpacity: true
+                        )
+                }
+
+
+
+                Section("Background") {
+                    ColorPicker(
+                        "Background tint",
+                        selection: $backgroundColor,
+                        supportsOpacity: true
+                    )
+                }
+
+                Button("Apply to Widget") {
+                    saveAppearance()
+                }
+                .font(.headline)
             }
-            .font(.headline)
+            .navigationTitle("Widget Style")
         }
-        .navigationTitle("Widget Style")
     }
 
     private func saveAppearance() {
-
-    
         let appearance = CamWidgetAppearance(
             backgroundTint: CodableColor(backgroundColor),
-            accentColor: accentColor,
+            accentColor: CodableColor(accentColor),
             fontStyle: fontStyle
         )
-        
 
-        let defaults = UserDefaults(suiteName: "group.com.example.camwidget2")
+        let defaults = UserDefaults(
+            suiteName: "group.com.example.camwidget2"
+        )
 
         if let data = try? JSONEncoder().encode(appearance) {
             defaults?.set(data, forKey: "widgetAppearance")
         }
 
-        WidgetCenter.shared.reloadAllTimelines()
+        WidgetCenter.shared.reloadTimelines(ofKind: "CamWidget")
     }
 }

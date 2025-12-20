@@ -1,15 +1,11 @@
 import SwiftUI
 
+// MARK: - Appearance model
+
 struct CamWidgetAppearance: Codable {
     let backgroundTint: CodableColor
-    let accentColor: AccentColor
+    let accentColor: CodableColor
     let fontStyle: FontStyle
-}
-
-
-
-enum AccentColor: String, Codable, CaseIterable {
-    case pink, blue, red, green
 }
 
 
@@ -17,10 +13,9 @@ enum FontStyle: String, Codable, CaseIterable {
     case regular
     case rounded
     case serif
-    case handwritten
-    case handwrittenBold
 }
 
+// MARK: - Codable Color
 
 struct CodableColor: Codable {
     let red: Double
@@ -45,4 +40,14 @@ struct CodableColor: Codable {
     var color: Color {
         Color(red: red, green: green, blue: blue, opacity: alpha)
     }
+}
+
+// MARK: - Defaults
+
+extension CamWidgetAppearance {
+    static let `default` = CamWidgetAppearance(
+        backgroundTint: CodableColor(.pink.opacity(0.2)),
+        accentColor: CodableColor(.black.opacity(0.8)),
+        fontStyle: .rounded
+    )
 }

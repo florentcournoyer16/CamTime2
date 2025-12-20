@@ -1,173 +1,129 @@
 import WidgetKit
 import SwiftUI
 
-// MARK: - Timeline Entry
+// MARK: - Entry
 
-struct SimpleEntry: TimelineEntry {
+struct CamEntry: TimelineEntry {
+    let msg: String
     let date: Date
-    let daysRemaining: Int
-    let message: String
+    let appearance: CamWidgetAppearance
 }
 
-// MARK: - AccentColor
+// MARK: - Provider
 
-extension AccentColor {
-    var color: Color {
-        switch self {
-        case .pink:  return .pink
-        case .blue:  return .blue
-        case .red:   return .red
-        case .green: return .green
-        }
-    }
-}
+struct CamProvider: TimelineProvider {
 
-
-// MARK: - FontStyle
-extension FontStyle {
-
-    func numberFont(size: CGFloat) -> Font {
-        switch self {
-        case .regular:
-            return .system(size: size, weight: .bold)
-
-        case .rounded:
-            return .system(size: size, weight: .bold, design: .rounded)
-
-        case .serif:
-            return .system(size: size, weight: .bold, design: .serif)
-
-        case .handwritten:
-            return .system(size: size, weight: .medium, design: .rounded)
-                .italic()
-
-        case .handwrittenBold:
-            return .system(size: size, weight: .bold, design: .rounded)
-                .italic()
-        }
+    func placeholder(in context: Context) -> CamEntry {
+        CamEntry(msg: "love u", date: .now, appearance: .default)
     }
 
-    var labelFont: Font {
-        switch self {
-        case .handwritten, .handwrittenBold:
-            return .callout.italic()
-        case .serif:
-            return .system(.headline, design: .serif)
-        default:
-            return .headline
-        }
+    func getSnapshot(in context: Context, completion: @escaping (CamEntry) -> Void) {
+        completion(loadEntry())
     }
-}
 
-
-// MARK: - Background style (widget-safe)
-
-extension View {
-    func applyBackgroundTint(_ tint: CodableColor) -> some View {
-        self.overlay(
-            tint.color
-                .opacity(0.18)
-                .blendMode(.softLight)
+    func getTimeline(in context: Context, completion: @escaping (Timeline<CamEntry>) -> Void) {
+        let entry = loadEntry()
+        completion(
+            Timeline(entries: [entry], policy: .atEnd)
         )
     }
-}
 
-
-
-// MARK: - Timeline Provider
-
-struct Provider: TimelineProvider {
-
-    func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), daysRemaining: 5, message: "Soon ❤️")
-    }
-
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        completion(SimpleEntry(date: Date(), daysRemaining: 5, message: "Soon ❤️"))
-    }
-
-    func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> ()) {
-
-        let entry = SimpleEntry(
-            date: Date(),
-            daysRemaining: 5,
-            message: "Soon ❤️"
+    private func loadEntry() -> CamEntry {
+        let defaults = UserDefaults(
+            suiteName: "group.com.example.camwidget2"
         )
 
-        // Demo refresh every minute
-        let nextUpdate = Date().addingTimeInterval(60)
-        completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
+        let appearance =
+            if let data = defaults?.data(forKey: "widgetAppearance"),
+               let decoded = try? JSONDecoder().decode(
+                    CamWidgetAppearance.self,
+                    from: data
+               ) {
+                decoded
+            } else {
+                CamWidgetAppearance.default
+            }
+
+        return CamEntry(msg: "love u", date: .now, appearance: appearance)
     }
 }
 
 // MARK: - Widget View
 
-struct CamWidgetEntryView: View {
-    var entry: Provider.Entry
-
-    @AppStorage(
-        "widgetAppearance",
-        store: UserDefaults(suiteName: "group.com.example.camwidget2")
-    )
-    private var appearanceData: Data = Data()
-
-    private var appearance: CamWidgetAppearance {
-        if let decoded = try? JSONDecoder().decode(
-            CamWidgetAppearance.self,
-            from: appearanceData
-        ) {
-            return decoded
-        }
-
-        // Fallback (must always be safe)
-        return CamWidgetAppearance(
-            backgroundTint: CodableColor(
-                    Color(red: 1.0, green: 0.95, blue: 0.97, opacity: 0.25)
-                ),
-            accentColor: .pink,
-            fontStyle: .rounded
-        )
-    }
+struct CamWidgetView: View {
+    let entry: CamEntry
 
     var body: some View {
         VStack(spacing: 6) {
-            
-            Text("\(entry.daysRemaining)")
-                .font(appearance.fontStyle.numberFont(size: 40))
-                .foregroundStyle(
-                    appearance.accentColor.color.opacity(0.85)
-                )
-            
-            Text(entry.message)
+
+            Text(entry.msg)
                 .font(.caption)
-                .foregroundStyle(.primary.opacity(0.75))
+                .foregroundColor(entry.appearance.accentColor.color)
+                .multilineTextAlignment(.center)
+
+            Text("\(daysRemaining)")
+                .font(daysFont)
+                .foregroundColor(entry.appearance.accentColor.color)
+                .minimumScaleFactor(0.5)
+
+            Text("days left until we see each other")
+                .font(.caption2)
+                .foregroundColor(entry.appearance.accentColor.color.opacity(0.8))
                 .multilineTextAlignment(.center)
         }
         .padding()
-        .applyBackgroundTint(appearance.backgroundTint)
+        .containerBackground(
+            entry.appearance.backgroundTint.color,
+            for: .widget
+        )
+    }
+
+    // MARK: - Date logic
+
+    private var daysRemaining: Int {
+        let calendar = Calendar.current
+        let startOfToday = calendar.startOfDay(for: .now)
+        let startOfTarget = calendar.startOfDay(for: entry.date)
+
+        let components = calendar.dateComponents(
+            [.day],
+            from: startOfToday,
+            to: startOfTarget
+        )
+
+        return max(components.day ?? 0, 0)
+    }
+
+    // MARK: - Font logic
+
+    private var daysFont: Font {
+        switch entry.appearance.fontStyle {
+        case .regular:
+            return .system(size: 42, weight: .bold)
+        case .rounded:
+            return .system(size: 42, weight: .bold, design: .rounded)
+        case .serif:
+            return .system(size: 42, weight: .bold, design: .serif)
+        }
     }
 }
 
-// MARK: - Widget Definition
+
+// MARK: - Widget
 
 @main
-struct CamWidget2: Widget {
-    let kind: String = "CamWidget2"
+struct CamWidget: Widget {
+    let kind = "CamWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            CamWidgetEntryView(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
+        StaticConfiguration(
+            kind: kind,
+            provider: CamProvider()
+        ) { entry in
+            CamWidgetView(entry: entry)
         }
-        .configurationDisplayName("Countdown Widget")
-        .description("Shows days remaining")
+        .configurationDisplayName("CamTime Widget")
+        .description("Displays CamTime with custom style.")
+        .supportedFamilies([.systemSmall])
     }
-}
-
-// MARK: - Preview
-
-#Preview(as: .systemSmall) {
-    CamWidget2()
-} timeline: {
-    SimpleEntry(date: .now, daysRemaining: 5, message: "Love u ❤️")
 }
