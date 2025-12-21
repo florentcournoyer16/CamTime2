@@ -40,6 +40,7 @@ struct CamTimeProvider: TimelineProvider {
             let data = defaults?.data(forKey: "camtime_data"),
             let decoded = try? JSONDecoder().decode(CamSharedData.self, from: data)
         {
+            print("Widget loaded new data")
             return CamTimeEntry(
                 date: Date(),
                 targetDate: decoded.targetDate,
