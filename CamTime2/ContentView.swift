@@ -36,6 +36,14 @@ struct ContentView: View {
                         supportsOpacity: true
                     )
                 }
+                
+                Button("Romantic") {
+                    backgroundColor = .pink.opacity(0.2)
+                    accentColor = .red
+                    fontStyle = .rounded
+                    saveAppearance()
+                }
+
 
                 Button("Apply to Widget") {
                     saveAppearance()
@@ -59,8 +67,12 @@ struct ContentView: View {
 
         if let data = try? JSONEncoder().encode(appearance) {
             defaults?.set(data, forKey: "widgetAppearance")
+            print("Saved appearance: \(appearance)")
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                WidgetCenter.shared.reloadTimelines(ofKind: "CamWidget")
+            }
         }
 
-        WidgetCenter.shared.reloadTimelines(ofKind: "CamWidget")
     }
 }

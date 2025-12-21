@@ -47,7 +47,7 @@ struct CodableColor: Codable {
 extension CamWidgetAppearance {
     static let `default` = CamWidgetAppearance(
         backgroundTint: CodableColor(.pink.opacity(0.2)),
-        accentColor: CodableColor(.black.opacity(0.8)),
+        accentColor: CodableColor(.black.opacity(0.85)),
         fontStyle: .rounded
     )
 }
