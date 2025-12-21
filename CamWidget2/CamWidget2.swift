@@ -37,7 +37,7 @@ struct CamTimeProvider: TimelineProvider {
         )
 
         if
-            let data = defaults?.data(forKey: "camtime_data"),
+            let data = defaults?.data(forKey: "camtime_data2"),
             let decoded = try? JSONDecoder().decode(CamSharedData.self, from: data)
         {
             print("Widget loaded new data")
