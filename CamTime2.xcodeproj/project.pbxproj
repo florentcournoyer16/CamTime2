@@ -52,21 +52,11 @@
 			);
 			target = 7ADEBC892EF733E400948FAD /* CamWidget2Extension */;
 		};
-		7ADEBCA12EF7350500948FAD /* Exceptions for "CamTime2" folder in "CamWidget2Extension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				WidgetAppearance.swift,
-			);
-			target = 7ADEBC892EF733E400948FAD /* CamWidget2Extension */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7ADEBC772EF7335E00948FAD /* CamTime2 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				7ADEBCA12EF7350500948FAD /* Exceptions for "CamTime2" folder in "CamWidget2Extension" target */,
-			);
 			path = CamTime2;
 			sourceTree = "<group>";
 		};
@@ -401,7 +391,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.com.example.camtime2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.camtime2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -434,7 +424,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.com.example.camtime2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.camtime2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -465,7 +455,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.com.example.camtime2.camwidget2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.camtime2.camwidget2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -496,7 +486,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.com.example.camtime2.camwidget2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.camtime2.camwidget2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

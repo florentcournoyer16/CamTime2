@@ -1,95 +1,101 @@
 import WidgetKit
 import SwiftUI
 
-// MARK: - Entry
+// MARK: - Timeline Entry
 
-struct CamEntry: TimelineEntry {
-    let msg: String
+struct CamTimeEntry: TimelineEntry {
+    let message: String
     let date: Date
-    let appearance: CamWidgetAppearance
 }
 
 // MARK: - Provider
 
-struct CamProvider: TimelineProvider {
+struct CamTimeProvider: TimelineProvider {
 
-    func placeholder(in context: Context) -> CamEntry {
-        CamEntry(msg: "love u", date: .now, appearance: .default)
+    func placeholder(in context: Context) -> CamTimeEntry {
+        CamTimeEntry(message: "I love u", date: Date())
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (CamEntry) -> Void) {
-        completion(loadEntry())
+    func getSnapshot(in context: Context, completion: @escaping (CamTimeEntry) -> Void) {
+        completion(CamTimeEntry(message: "I love u", date: Date()))
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<CamEntry>) -> Void) {
-        let entry = loadEntry()
+    func getTimeline(in context: Context, completion: @escaping (Timeline<CamTimeEntry>) -> Void) {
+
+        // Date cible (à modifier)
+        let targetDate = Calendar.current.date(
+            from: DateComponents(year: 2025, month: 6, day: 1)
+        )!
+
+        let entry = CamTimeEntry(message: "I love u", date: targetDate)
+
         completion(
-            Timeline(entries: [entry], policy: .atEnd)
+            Timeline(entries: [entry], policy: .never)
         )
     }
-
-    private func loadEntry() -> CamEntry {
-        let defaults = UserDefaults(suiteName: "group.com.example.camwidget2")
-
-        let appearance: CamWidgetAppearance
-        if let data = defaults?.data(forKey: "widgetAppearance"),
-           let decoded = try? JSONDecoder().decode(CamWidgetAppearance.self, from: data) {
-            appearance = decoded
-        } else {
-            appearance = CamWidgetAppearance.default
-        }
-
-        return CamEntry(msg: "love u", date: .now, appearance: appearance)
-    }
-
 }
-
 
 // MARK: - Widget View
 
-struct CamWidgetView: View {
-    let entry: CamEntry
+struct CamTimeWidgetView: View {
+    let entry: CamTimeEntry
 
     var body: some View {
         VStack(spacing: 8) {
-            Text(entry.msg)
-                .font(.caption)
-                .foregroundColor(entry.appearance.accentColor.color)
-                .multilineTextAlignment(.center)
+
+            Text("love you")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundColor(.white.opacity(0.9))
+            
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.1),
+                            Color.white.opacity(0.6),
+                            Color.white.opacity(0.1)
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .frame(height: 2)
+                .frame(maxWidth: 140)
 
             Text("\(daysRemaining)")
-                .font(daysFont)
-                .foregroundColor(entry.appearance.accentColor.color)
-                .multilineTextAlignment(.center)
+                .font(.system(size: 24, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
 
+            Text("days to go")
+                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .foregroundColor(.white.opacity(0.9))
 
-            Text("days left until we see each other")
-                .font(.caption2)
-                .foregroundColor(entry.appearance.accentColor.color.opacity(0.7))
+            Text("until we meet again")
+                .font(.system(size: 12, weight: .regular, design: .rounded))
+                .foregroundColor(.white.opacity(0.9))
                 .multilineTextAlignment(.center)
         }
         .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(entry.appearance.backgroundTint.color)
+        .containerBackground(
+            LinearGradient(
+                colors: [
+                    Color.pink.opacity(0.45),
+                    Color.pink.opacity(0.20)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            for: .widget
         )
     }
 
-    // MARK: - Calculate remaining days
     private var daysRemaining: Int {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: .now)
+        let today = calendar.startOfDay(for: Date())
         let target = calendar.startOfDay(for: entry.date)
-        return max(calendar.dateComponents([.day], from: today, to: target).day ?? 0, 0)
-    }
 
-    // MARK: - Dynamic font based on style
-    private var daysFont: Font {
-        switch entry.appearance.fontStyle {
-        case .regular: return .system(size: 42, weight: .bold)
-        case .rounded: return .system(size: 42, weight: .bold, design: .rounded)
-        case .serif: return .system(size: 42, weight: .bold, design: .serif)
-        }
+        let components = calendar.dateComponents([.day], from: today, to: target)
+        return max(components.day ?? 0, 0)
     }
 }
 
@@ -97,18 +103,15 @@ struct CamWidgetView: View {
 // MARK: - Widget
 
 @main
-struct CamWidget: Widget {
-    let kind = "CamWidget"
+struct CamTimeWidget: Widget {
+    let kind = "CamTimeWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(
-            kind: kind,
-            provider: CamProvider()
-        ) { entry in
-            CamWidgetView(entry: entry)
+        StaticConfiguration(kind: kind, provider: CamTimeProvider()) { entry in
+            CamTimeWidgetView(entry: entry)
         }
         .configurationDisplayName("CamTime")
-        .description("")
+        .description("Days until we see each other.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
