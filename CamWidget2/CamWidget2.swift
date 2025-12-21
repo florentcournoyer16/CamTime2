@@ -4,33 +4,53 @@ import SwiftUI
 // MARK: - Timeline Entry
 
 struct CamTimeEntry: TimelineEntry {
-    let message: String
     let date: Date
+    let targetDate: Date
+    let message: String
 }
+
 
 // MARK: - Provider
 
 struct CamTimeProvider: TimelineProvider {
 
     func placeholder(in context: Context) -> CamTimeEntry {
-        CamTimeEntry(message: "I love u", date: Date())
+        CamTimeEntry(
+            date: Date(),
+            targetDate: Date(),
+            message: "love you"
+        )
     }
 
     func getSnapshot(in context: Context, completion: @escaping (CamTimeEntry) -> Void) {
-        completion(CamTimeEntry(message: "I love u", date: Date()))
+        completion(loadEntry())
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<CamTimeEntry>) -> Void) {
+        let entry = loadEntry()
+        completion(Timeline(entries: [entry], policy: .atEnd))
+    }
 
-        // Date cible (à modifier)
-        let targetDate = Calendar.current.date(
-            from: DateComponents(year: 2025, month: 6, day: 1)
-        )!
+    private func loadEntry() -> CamTimeEntry {
+        let defaults = UserDefaults(
+            suiteName: "group.com.example.camtime2"
+        )
 
-        let entry = CamTimeEntry(message: "I love u", date: targetDate)
+        if
+            let data = defaults?.data(forKey: "camtime_data"),
+            let decoded = try? JSONDecoder().decode(CamSharedData.self, from: data)
+        {
+            return CamTimeEntry(
+                date: Date(),
+                targetDate: decoded.targetDate,
+                message: decoded.message
+            )
+        }
 
-        completion(
-            Timeline(entries: [entry], policy: .never)
+        return CamTimeEntry(
+            date: Date(),
+            targetDate: Date(),
+            message: "love you"
         )
     }
 }
@@ -43,7 +63,7 @@ struct CamTimeWidgetView: View {
     var body: some View {
         VStack(spacing: 8) {
 
-            Text("love you")
+            Text(entry.message)
                 .font(.system(size: 16, weight: .bold, design: .rounded))
                 .foregroundColor(.white.opacity(0.9))
             
@@ -92,7 +112,8 @@ struct CamTimeWidgetView: View {
     private var daysRemaining: Int {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
-        let target = calendar.startOfDay(for: entry.date)
+        let target = calendar.startOfDay(for: entry.targetDate)
+
 
         let components = calendar.dateComponents([.day], from: today, to: target)
         return max(components.day ?? 0, 0)
