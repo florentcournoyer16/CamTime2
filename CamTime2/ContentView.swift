@@ -5,9 +5,12 @@ import WidgetKit
 
 struct ContentView: View {
 
-    @State private var firebaseMessage: String = "No data yet"
+    @State private var firebaseMessage: String = "No message yet"
+    @State private var firebaseResponse: String = "No response yet"
+    @State private var editedResponse: String = ""
     @State private var firebaseDate: Date? = nil
     @State private var isFetching = false
+    @State private var isSaving = false
 
     var body: some View {
         
@@ -35,6 +38,24 @@ struct ContentView: View {
                 }
             }
 
+            TextField("Write your response…", text: $editedResponse)
+                   .textFieldStyle(.roundedBorder)
+
+            Button {
+                   saveResponseToFirebase()
+               } label: {
+                   if isSaving {
+                       ProgressView()
+                   } else {
+                       Text("Send response")
+                   }
+               }
+               .disabled(
+                   editedResponse == firebaseResponse ||
+                   editedResponse.isEmpty ||
+                   isSaving
+               )
+
             Button {
                 forceFetchOnce()
             } label: {
@@ -49,16 +70,18 @@ struct ContentView: View {
         .padding()
         .onAppear {
             startFirebaseListener(
-                onUpdate: updateUI(message:targetDate:)
+                onUpdate: updateUI(message:targetDate:response:)
             )
         }
     }
 
     @MainActor
-    private func updateUI(message: String, targetDate: Date) {
+    private func updateUI(message: String, targetDate: Date, response: String) {
         self.firebaseMessage = message
         self.firebaseDate = targetDate
+        self.firebaseResponse = response
     }
+
     
     func forceFetchOnce() {
         let db = Firestore.firestore()
@@ -83,9 +106,10 @@ struct ContentView: View {
                 guard
                     let data = snapshot?.data(),
                     let message = data["message"] as? String,
-                    let targetDateStr = data["target_date"] as? String
+                    let targetDateStr = data["target_date"] as? String,
+                    let response = data["response"] as? String
                 else {
-                    print("Force fetch invalid data")
+                    print("Invalid Firebase data")
                     return
                 }
 
@@ -97,7 +121,7 @@ struct ContentView: View {
                 }
 
                 Task { @MainActor in
-                    updateUI(message: message, targetDate: targetDate)
+                    updateUI(message: message, targetDate: targetDate, response: response)
                 }
             }
     }
@@ -112,6 +136,31 @@ struct ContentView: View {
         let components = calendar.dateComponents([.day], from: today, to: target)
         return max(components.day ?? 0, 0)
     }
+    
+    
+    func saveResponseToFirebase() {
+        let db = Firestore.firestore()
+
+        isSaving = true
+
+        db.collection("widget")
+            .document("config")
+            .updateData([
+                "response": editedResponse
+            ]) { error in
+
+                DispatchQueue.main.async {
+                    isSaving = false
+                }
+
+                if let error = error {
+                    print("Failed to update response:", error)
+                } else {
+                    print("Response successfully updated")
+                }
+            }
+    }
+
 
 
 
@@ -121,7 +170,7 @@ struct ContentView: View {
 
 private var listener: ListenerRegistration?
 func startFirebaseListener(
-    onUpdate: @escaping @MainActor (_ message: String, _ targetDate: Date) -> Void
+    onUpdate: @escaping @MainActor (_ message: String, _ targetDate: Date, _ response: String) -> Void
 ) {
     let db = Firestore.firestore()
 
@@ -139,11 +188,13 @@ func startFirebaseListener(
             guard
                 let data = snapshot?.data(),
                 let message = data["message"] as? String,
-                let targetDateStr = data["target_date"] as? String
+                let targetDateStr = data["target_date"] as? String,
+                let response = data["response"] as? String
             else {
                 print("Invalid Firebase data")
                 return
             }
+
 
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
@@ -157,13 +208,15 @@ func startFirebaseListener(
 
             Task { @MainActor in
                 // Update app UI
-                onUpdate(message, targetDate)
+                onUpdate(message, targetDate, response)
 
                 // Update shared widget data
                 let shared = CamSharedData(
                     message: message,
-                    targetDate: targetDate
+                    targetDate: targetDate,
+                    response: response
                 )
+
 
                 let defaults = UserDefaults(
                     suiteName: "group.com.example.camtime2"
