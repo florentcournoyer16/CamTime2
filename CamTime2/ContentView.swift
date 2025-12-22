@@ -7,7 +7,7 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
-            Text("CamTime")
+            Text("CamTime2")
         }
         .onAppear {
             startFirebaseListener()
@@ -48,7 +48,7 @@ func startFirebaseListener() {
                 )
 
                 let defaults = UserDefaults(
-                    suiteName: "group.com.example.camtime2"
+                    suiteName: "com.example.camtime2"
                 )
 
                 if let encoded = try? JSONEncoder().encode(shared) {

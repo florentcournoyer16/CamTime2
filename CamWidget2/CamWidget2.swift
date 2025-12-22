@@ -33,11 +33,11 @@ struct CamTimeProvider: TimelineProvider {
 
     private func loadEntry() -> CamTimeEntry {
         let defaults = UserDefaults(
-            suiteName: "group.com.example.camtime2"
+            suiteName: "com.example.camtime2"
         )
 
         if
-            let data = defaults?.data(forKey: "camtime_data2"),
+            let data = defaults?.data(forKey: "camtime_data"),
             let decoded = try? JSONDecoder().decode(CamSharedData.self, from: data)
         {
             print("Widget loaded new data")
