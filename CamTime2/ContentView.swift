@@ -5,61 +5,174 @@ import WidgetKit
 
 struct ContentView: View {
 
+    @State private var firebaseMessage: String = "No data yet"
+    @State private var firebaseDate: Date? = nil
+    @State private var isFetching = false
+
     var body: some View {
-        VStack {
+        
+        
+
+        VStack(spacing: 16) {
+
             Text("CamTime2")
+                .font(.title)
+    
+            Text(firebaseMessage)
+                .font(.subheadline)
+            
+            if let days = daysRemaining {
+                VStack(spacing: 4) {
+                    Text("\(days)")
+                        .font(.system(size: 36, weight: .bold, design: .rounded))
+
+                    Text("days to go")
+                        .font(.headline)
+
+                    Text("until we meet again")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+            }
+
+            Button {
+                forceFetchOnce()
+            } label: {
+                if isFetching {
+                    ProgressView()
+                } else {
+                    Text("Force fetch from Firebase")
+                }
+            }
+            .disabled(isFetching)
         }
+        .padding()
         .onAppear {
-            startFirebaseListener()
+            startFirebaseListener(
+                onUpdate: updateUI(message:targetDate:)
+            )
         }
     }
+
+    @MainActor
+    private func updateUI(message: String, targetDate: Date) {
+        self.firebaseMessage = message
+        self.firebaseDate = targetDate
+    }
+    
+    func forceFetchOnce() {
+        let db = Firestore.firestore()
+
+        Task { @MainActor in
+            isFetching = true
+        }
+
+        db.collection("widget")
+            .document("config")
+            .getDocument { snapshot, error in
+
+                Task { @MainActor in
+                    isFetching = false
+                }
+
+                if let error = error {
+                    print("Force fetch error:", error)
+                    return
+                }
+
+                guard
+                    let data = snapshot?.data(),
+                    let message = data["message"] as? String,
+                    let targetDateStr = data["target_date"] as? String
+                else {
+                    print("Force fetch invalid data")
+                    return
+                }
+
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd"
+
+                guard let targetDate = formatter.date(from: targetDateStr) else {
+                    return
+                }
+
+                Task { @MainActor in
+                    updateUI(message: message, targetDate: targetDate)
+                }
+            }
+    }
+    
+    private var daysRemaining: Int? {
+        guard let targetDate = firebaseDate else { return nil }
+
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let target = calendar.startOfDay(for: targetDate)
+
+        let components = calendar.dateComponents([.day], from: today, to: target)
+        return max(components.day ?? 0, 0)
+    }
+
+
+
 }
 
 
-private var listener: ListenerRegistration?
 
-func startFirebaseListener() {
+private var listener: ListenerRegistration?
+func startFirebaseListener(
+    onUpdate: @escaping @MainActor (_ message: String, _ targetDate: Date) -> Void
+) {
     let db = Firestore.firestore()
-    
+
     print("App begin")
 
     listener = db.collection("widget")
         .document("config")
         .addSnapshotListener { snapshot, error in
 
+            if let error = error {
+                print("Firebase error:", error)
+                return
+            }
+
             guard
                 let data = snapshot?.data(),
                 let message = data["message"] as? String,
-                let target_date_str = data["target_date"] as? String
-            else { return }
+                let targetDateStr = data["target_date"] as? String
+            else {
+                print("Invalid Firebase data")
+                return
+            }
 
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
-            
-            print("Firebase update received")
 
-            guard let target_date = formatter.date(from: target_date_str) else { return }
+            guard let targetDate = formatter.date(from: targetDateStr) else {
+                print("Invalid date format")
+                return
+            }
 
-            // 🔁 Hop to MainActor
+            print("Firebase update received:", message)
+
             Task { @MainActor in
+                // Update app UI
+                onUpdate(message, targetDate)
+
+                // Update shared widget data
                 let shared = CamSharedData(
                     message: message,
-                    targetDate: target_date
+                    targetDate: targetDate
                 )
 
                 let defaults = UserDefaults(
-                    suiteName: "com.example.camtime2"
+                    suiteName: "group.com.example.camtime2"
                 )
 
                 if let encoded = try? JSONEncoder().encode(shared) {
                     defaults?.set(encoded, forKey: "camtime_data")
-                    print("Data encoded")
-
-                    // 🚀 THIS updates the widget
                     WidgetCenter.shared.reloadAllTimelines()
                 }
             }
         }
 }
-
-

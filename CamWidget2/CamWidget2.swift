@@ -33,7 +33,7 @@ struct CamTimeProvider: TimelineProvider {
 
     private func loadEntry() -> CamTimeEntry {
         let defaults = UserDefaults(
-            suiteName: "com.example.camtime2"
+            suiteName: "group.com.example.camtime2"
         )
 
         if
