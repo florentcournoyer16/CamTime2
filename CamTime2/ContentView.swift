@@ -2,72 +2,40 @@ import SwiftUI
 import FirebaseFirestore
 import WidgetKit
 
-
 struct ContentView: View {
 
+    // MARK: - State
+
     @State private var firebaseMessage: String = "No message yet"
-    @State private var firebaseResponse: String = "No response yet"
+    @State private var firebaseResponse: String = ""
     @State private var editedResponse: String = ""
     @State private var firebaseDate: Date? = nil
+
     @State private var isFetching = false
     @State private var isSaving = false
 
+    // MARK: - UI
+
     var body: some View {
-        
-        
+        ZStack {
 
-        VStack(spacing: 16) {
+            // Background
+            LinearGradient(
+                colors: [
+                    Color.pink.opacity(0.35),
+                    Color.pink.opacity(0.15),
+                    Color.white
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
 
-            Text("CamTime2")
-                .font(.title)
-    
-            Text(firebaseMessage)
-                .font(.subheadline)
-            
-            if let days = daysRemaining {
-                VStack(spacing: 4) {
-                    Text("\(days)")
-                        .font(.system(size: 36, weight: .bold, design: .rounded))
-
-                    Text("days to go")
-                        .font(.headline)
-
-                    Text("until we meet again")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
+            VStack {
+                mainCard
             }
-
-            TextField("Write your response…", text: $editedResponse)
-                   .textFieldStyle(.roundedBorder)
-
-            Button {
-                   saveResponseToFirebase()
-               } label: {
-                   if isSaving {
-                       ProgressView()
-                   } else {
-                       Text("Send response")
-                   }
-               }
-               .disabled(
-                   editedResponse == firebaseResponse ||
-                   editedResponse.isEmpty ||
-                   isSaving
-               )
-
-            Button {
-                forceFetchOnce()
-            } label: {
-                if isFetching {
-                    ProgressView()
-                } else {
-                    Text("Force fetch from Firebase")
-                }
-            }
-            .disabled(isFetching)
+            .padding()
         }
-        .padding()
         .onAppear {
             startFirebaseListener(
                 onUpdate: updateUI(message:targetDate:response:)
@@ -75,26 +43,134 @@ struct ContentView: View {
         }
     }
 
-    @MainActor
-    private func updateUI(message: String, targetDate: Date, response: String) {
-        self.firebaseMessage = message
-        self.firebaseDate = targetDate
-        self.firebaseResponse = response
+    private var mainCard: some View {
+        VStack(spacing: 20) {
+
+            // Title
+            Text("CamTime2")
+                .font(.system(size: 28, weight: .bold, design: .rounded))
+                .foregroundColor(.pink)
+
+            // Message
+            Text(firebaseMessage)
+                .font(.system(size: 16, weight: .medium, design: .rounded))
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+            
+            Text("Message : " + firebaseResponse)
+                .font(.system(size: 16, weight: .medium, design: .rounded))
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+
+            // Countdown
+            if let days = daysRemaining {
+                VStack(spacing: 6) {
+                    Text("\(days)")
+                        .font(.system(size: 42, weight: .bold, design: .rounded))
+                        .foregroundColor(.pink)
+
+                    Text("days to go")
+                        .font(.headline)
+                        .foregroundColor(.pink.opacity(0.8))
+
+                    Text("until we meet again")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                .padding(.vertical, 8)
+            }
+
+            // Response field
+            TextField("Write your response…", text: $editedResponse)
+                .padding(12)
+                .background(
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(Color.pink.opacity(0.1))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(Color.pink.opacity(0.3), lineWidth: 1)
+                )
+
+            // Send response button
+            Button {
+                saveResponseToFirebase()
+            } label: {
+                HStack {
+                    if isSaving {
+                        ProgressView()
+                    } else {
+                        Text("Send response 💕")
+                            .fontWeight(.semibold)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(
+                    LinearGradient(
+                        colors: [
+                            Color.pink,
+                            Color.pink.opacity(0.7)
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .foregroundColor(.white)
+                .cornerRadius(16)
+                .shadow(color: .pink.opacity(0.3), radius: 6, x: 0, y: 4)
+            }
+            .disabled(
+                editedResponse == firebaseResponse ||
+                editedResponse.isEmpty ||
+                isSaving
+            )
+            .opacity(
+                editedResponse == firebaseResponse || editedResponse.isEmpty ? 0.6 : 1
+            )
+
+            // Force fetch (debug)
+            Button {
+                forceFetchOnce()
+            } label: {
+                if isFetching {
+                    ProgressView()
+                } else {
+                    Text("Force refresh")
+                        .font(.footnote)
+                        .foregroundColor(.pink)
+                }
+            }
+            .disabled(isFetching)
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 24)
+                .fill(Color.white.opacity(0.85))
+                .shadow(color: .pink.opacity(0.2), radius: 10, x: 0, y: 5)
+        )
     }
 
-    
+    // MARK: - UI Update
+
+    @MainActor
+    private func updateUI(message: String, targetDate: Date, response: String) {
+        firebaseMessage = message
+        firebaseDate = targetDate
+        firebaseResponse = response
+        editedResponse = response
+    }
+
+    // MARK: - Firebase Reads
+
     func forceFetchOnce() {
         let db = Firestore.firestore()
-
-        Task { @MainActor in
-            isFetching = true
-        }
+        isFetching = true
 
         db.collection("widget")
             .document("config")
             .getDocument { snapshot, error in
-
-                Task { @MainActor in
+                DispatchQueue.main.async {
                     isFetching = false
                 }
 
@@ -116,31 +192,22 @@ struct ContentView: View {
                 let formatter = DateFormatter()
                 formatter.dateFormat = "yyyy-MM-dd"
 
-                guard let targetDate = formatter.date(from: targetDateStr) else {
-                    return
-                }
+                guard let targetDate = formatter.date(from: targetDateStr) else { return }
 
-                Task { @MainActor in
-                    updateUI(message: message, targetDate: targetDate, response: response)
+                DispatchQueue.main.async {
+                    updateUI(
+                        message: message,
+                        targetDate: targetDate,
+                        response: response
+                    )
                 }
             }
     }
-    
-    private var daysRemaining: Int? {
-        guard let targetDate = firebaseDate else { return nil }
 
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let target = calendar.startOfDay(for: targetDate)
+    // MARK: - Firebase Writes
 
-        let components = calendar.dateComponents([.day], from: today, to: target)
-        return max(components.day ?? 0, 0)
-    }
-    
-    
     func saveResponseToFirebase() {
         let db = Firestore.firestore()
-
         isSaving = true
 
         db.collection("widget")
@@ -148,7 +215,6 @@ struct ContentView: View {
             .updateData([
                 "response": editedResponse
             ]) { error in
-
                 DispatchQueue.main.async {
                     isSaving = false
                 }
@@ -161,20 +227,28 @@ struct ContentView: View {
             }
     }
 
+    // MARK: - Date Logic
 
+    private var daysRemaining: Int? {
+        guard let targetDate = firebaseDate else { return nil }
 
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let target = calendar.startOfDay(for: targetDate)
 
+        let components = calendar.dateComponents([.day], from: today, to: target)
+        return max(components.day ?? 0, 0)
+    }
 }
 
-
+// MARK: - Firebase Listener (Shared)
 
 private var listener: ListenerRegistration?
+
 func startFirebaseListener(
     onUpdate: @escaping @MainActor (_ message: String, _ targetDate: Date, _ response: String) -> Void
 ) {
     let db = Firestore.firestore()
-
-    print("App begin")
 
     listener = db.collection("widget")
         .document("config")
@@ -195,7 +269,6 @@ func startFirebaseListener(
                 return
             }
 
-
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
 
@@ -204,19 +277,14 @@ func startFirebaseListener(
                 return
             }
 
-            print("Firebase update received:", message)
-
             Task { @MainActor in
-                // Update app UI
                 onUpdate(message, targetDate, response)
 
-                // Update shared widget data
                 let shared = CamSharedData(
                     message: message,
                     targetDate: targetDate,
                     response: response
                 )
-
 
                 let defaults = UserDefaults(
                     suiteName: "group.com.example.camtime2"
