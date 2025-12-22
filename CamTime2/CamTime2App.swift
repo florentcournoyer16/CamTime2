@@ -1,18 +1,25 @@
-//
-//  CamTime2App.swift
-//  CamTime2
-//
-//  Created by user286406 on 12/20/25.
-//
 
 import SwiftUI
+import FirebaseCore
+
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+
+  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    FirebaseApp.configure()
+    return true
+  }
+}
+
 
 @main
-struct CamTime2App: App {
+struct CamTimeApp: App {
+
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
     }
 }
-

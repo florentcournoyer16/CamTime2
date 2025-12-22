@@ -1,110 +1,123 @@
 import WidgetKit
 import SwiftUI
 
-// MARK: - Entry
+// MARK: - Timeline Entry
 
-struct CamEntry: TimelineEntry {
-    let msg: String
+struct CamTimeEntry: TimelineEntry {
     let date: Date
-    let appearance: CamWidgetAppearance
+    let targetDate: Date
+    let message: String
 }
+
 
 // MARK: - Provider
 
-struct CamProvider: TimelineProvider {
+struct CamTimeProvider: TimelineProvider {
 
-    func placeholder(in context: Context) -> CamEntry {
-        CamEntry(msg: "love u", date: .now, appearance: .default)
+    func placeholder(in context: Context) -> CamTimeEntry {
+        CamTimeEntry(
+            date: Date(),
+            targetDate: Date(),
+            message: "love you"
+        )
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (CamEntry) -> Void) {
+    func getSnapshot(in context: Context, completion: @escaping (CamTimeEntry) -> Void) {
         completion(loadEntry())
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<CamEntry>) -> Void) {
+    func getTimeline(in context: Context, completion: @escaping (Timeline<CamTimeEntry>) -> Void) {
         let entry = loadEntry()
-        completion(
-            Timeline(entries: [entry], policy: .atEnd)
-        )
+        completion(Timeline(entries: [entry], policy: .atEnd))
     }
 
-    private func loadEntry() -> CamEntry {
+    private func loadEntry() -> CamTimeEntry {
         let defaults = UserDefaults(
-            suiteName: "group.com.example.camwidget2"
+            suiteName: "group.com.example.camtime2"
         )
 
-        let appearance =
-            if let data = defaults?.data(forKey: "widgetAppearance"),
-               let decoded = try? JSONDecoder().decode(
-                    CamWidgetAppearance.self,
-                    from: data
-               ) {
-                decoded
-            } else {
-                CamWidgetAppearance.default
-            }
+        if
+            let data = defaults?.data(forKey: "camtime_data"),
+            let decoded = try? JSONDecoder().decode(CamSharedData.self, from: data)
+        {
+            print("Widget loaded new data")
+            return CamTimeEntry(
+                date: Date(),
+                targetDate: decoded.targetDate,
+                message: decoded.message
+            )
+        }
 
-        return CamEntry(msg: "love u", date: .now, appearance: appearance)
+        return CamTimeEntry(
+            date: Date(),
+            targetDate: Date(),
+            message: "love you"
+        )
     }
 }
 
 // MARK: - Widget View
 
-struct CamWidgetView: View {
-    let entry: CamEntry
+struct CamTimeWidgetView: View {
+    let entry: CamTimeEntry
 
     var body: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 8) {
 
-            Text(entry.msg)
-                .font(.caption)
-                .foregroundColor(entry.appearance.accentColor.color)
-                .multilineTextAlignment(.center)
+            Text(entry.message)
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundColor(.white.opacity(0.9))
+            
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.1),
+                            Color.white.opacity(0.6),
+                            Color.white.opacity(0.1)
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .frame(height: 2)
+                .frame(maxWidth: 140)
 
             Text("\(daysRemaining)")
-                .font(daysFont)
-                .foregroundColor(entry.appearance.accentColor.color)
-                .minimumScaleFactor(0.5)
+                .font(.system(size: 24, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
 
-            Text("days left until we see each other")
-                .font(.caption2)
-                .foregroundColor(entry.appearance.accentColor.color.opacity(0.8))
+            Text("days to go")
+                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .foregroundColor(.white.opacity(0.9))
+
+            Text("until we meet again")
+                .font(.system(size: 12, weight: .regular, design: .rounded))
+                .foregroundColor(.white.opacity(0.9))
                 .multilineTextAlignment(.center)
         }
         .padding()
         .containerBackground(
-            entry.appearance.backgroundTint.color,
+            LinearGradient(
+                colors: [
+                    Color.pink.opacity(0.45),
+                    Color.pink.opacity(0.20)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
             for: .widget
         )
     }
 
-    // MARK: - Date logic
-
     private var daysRemaining: Int {
         let calendar = Calendar.current
-        let startOfToday = calendar.startOfDay(for: .now)
-        let startOfTarget = calendar.startOfDay(for: entry.date)
+        let today = calendar.startOfDay(for: Date())
+        let target = calendar.startOfDay(for: entry.targetDate)
 
-        let components = calendar.dateComponents(
-            [.day],
-            from: startOfToday,
-            to: startOfTarget
-        )
 
+        let components = calendar.dateComponents([.day], from: today, to: target)
         return max(components.day ?? 0, 0)
-    }
-
-    // MARK: - Font logic
-
-    private var daysFont: Font {
-        switch entry.appearance.fontStyle {
-        case .regular:
-            return .system(size: 42, weight: .bold)
-        case .rounded:
-            return .system(size: 42, weight: .bold, design: .rounded)
-        case .serif:
-            return .system(size: 42, weight: .bold, design: .serif)
-        }
     }
 }
 
@@ -112,18 +125,15 @@ struct CamWidgetView: View {
 // MARK: - Widget
 
 @main
-struct CamWidget: Widget {
-    let kind = "CamWidget"
+struct CamTimeWidget: Widget {
+    let kind = "CamTimeWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(
-            kind: kind,
-            provider: CamProvider()
-        ) { entry in
-            CamWidgetView(entry: entry)
+        StaticConfiguration(kind: kind, provider: CamTimeProvider()) { entry in
+            CamTimeWidgetView(entry: entry)
         }
-        .configurationDisplayName("CamTime Widget")
-        .description("Displays CamTime with custom style.")
-        .supportedFamilies([.systemSmall])
+        .configurationDisplayName("CamTime")
+        .description("Days until we see each other.")
+        .supportedFamilies([.systemSmall, .systemMedium])
     }
 }

@@ -10,6 +10,8 @@
 		7ADEBC8D2EF733E400948FAD /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ADEBC8C2EF733E400948FAD /* WidgetKit.framework */; };
 		7ADEBC8F2EF733E400948FAD /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ADEBC8E2EF733E400948FAD /* SwiftUI.framework */; };
 		7ADEBC9A2EF733E600948FAD /* CamWidget2Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 7ADEBC8A2EF733E400948FAD /* CamWidget2Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7ADEBCA92EF7879600948FAD /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7ADEBCA82EF7879600948FAD /* FirebaseCore */; };
+		7ADEBCAB2EF7879600948FAD /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 7ADEBCAA2EF7879600948FAD /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,10 +54,10 @@
 			);
 			target = 7ADEBC892EF733E400948FAD /* CamWidget2Extension */;
 		};
-		7ADEBCA12EF7350500948FAD /* Exceptions for "CamTime2" folder in "CamWidget2Extension" target */ = {
+		7ADEBCB12EF788E700948FAD /* Exceptions for "Shared" folder in "CamWidget2Extension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				WidgetAppearance.swift,
+				CamData.swift,
 			);
 			target = 7ADEBC892EF733E400948FAD /* CamWidget2Extension */;
 		};
@@ -64,9 +66,6 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7ADEBC772EF7335E00948FAD /* CamTime2 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				7ADEBCA12EF7350500948FAD /* Exceptions for "CamTime2" folder in "CamWidget2Extension" target */,
-			);
 			path = CamTime2;
 			sourceTree = "<group>";
 		};
@@ -78,6 +77,14 @@
 			path = CamWidget2;
 			sourceTree = "<group>";
 		};
+		7ADEBCAC2EF7880300948FAD /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7ADEBCB12EF788E700948FAD /* Exceptions for "Shared" folder in "CamWidget2Extension" target */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +92,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7ADEBCA92EF7879600948FAD /* FirebaseCore in Frameworks */,
+				7ADEBCAB2EF7879600948FAD /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,6 +112,7 @@
 		7ADEBC6C2EF7335E00948FAD = {
 			isa = PBXGroup;
 			children = (
+				7ADEBCAC2EF7880300948FAD /* Shared */,
 				7ADEBCA62EF73D7000948FAD /* CamWidget2Extension.entitlements */,
 				7ADEBC772EF7335E00948FAD /* CamTime2 */,
 				7ADEBC902EF733E400948FAD /* CamWidget2 */,
@@ -148,9 +158,12 @@
 			);
 			fileSystemSynchronizedGroups = (
 				7ADEBC772EF7335E00948FAD /* CamTime2 */,
+				7ADEBCAC2EF7880300948FAD /* Shared */,
 			);
 			name = CamTime2;
 			packageProductDependencies = (
+				7ADEBCA82EF7879600948FAD /* FirebaseCore */,
+				7ADEBCAA2EF7879600948FAD /* FirebaseFirestore */,
 			);
 			productName = CamTime2;
 			productReference = 7ADEBC752EF7335E00948FAD /* CamTime2.app */;
@@ -205,6 +218,9 @@
 			);
 			mainGroup = 7ADEBC6C2EF7335E00948FAD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7ADEBCA72EF7879600948FAD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7ADEBC762EF7335E00948FAD /* Products */;
 			projectDirPath = "";
@@ -385,12 +401,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = CamTime2/CamTime2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9JNM99HSX4;
+				DEVELOPMENT_TEAM = X6PGRF9UA8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CamTime;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -401,7 +420,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.com.example.camwidget2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.camtime2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -418,12 +437,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = CamTime2/CamTime2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9JNM99HSX4;
+				DEVELOPMENT_TEAM = X6PGRF9UA8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CamTime;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -434,7 +456,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.com.example.camwidget2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.camtime2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -454,7 +476,7 @@
 				CODE_SIGN_ENTITLEMENTS = CamWidget2Extension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9JNM99HSX4;
+				DEVELOPMENT_TEAM = X6PGRF9UA8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CamWidget2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CamWidget2;
@@ -465,7 +487,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.com.example.camwidget2.camtime2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.camtime2.camwidget2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -485,7 +507,7 @@
 				CODE_SIGN_ENTITLEMENTS = CamWidget2Extension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9JNM99HSX4;
+				DEVELOPMENT_TEAM = X6PGRF9UA8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CamWidget2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CamWidget2;
@@ -496,7 +518,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.com.example.camwidget2.camtime2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.camtime2.camwidget2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -539,6 +561,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7ADEBCA72EF7879600948FAD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.7.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7ADEBCA82EF7879600948FAD /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7ADEBCA72EF7879600948FAD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		7ADEBCAA2EF7879600948FAD /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7ADEBCA72EF7879600948FAD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7ADEBC6D2EF7335E00948FAD /* Project object */;
 }
