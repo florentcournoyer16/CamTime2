@@ -9,7 +9,6 @@ struct CamTimeEntry: TimelineEntry {
     let message: String
 }
 
-
 // MARK: - Provider
 
 struct CamTimeProvider: TimelineProvider {
@@ -28,19 +27,20 @@ struct CamTimeProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<CamTimeEntry>) -> Void) {
         let entry = loadEntry()
-        completion(Timeline(entries: [entry], policy: .atEnd))
+        completion(
+            Timeline(entries: [entry], policy: .after(Date()))
+        )
     }
 
     private func loadEntry() -> CamTimeEntry {
         let defaults = UserDefaults(
-            suiteName: "group.com.example.camtime2"
+            suiteName: "group.com.florent.camtime2"
         )
 
         if
             let data = defaults?.data(forKey: "camtime_data"),
             let decoded = try? JSONDecoder().decode(CamSharedData.self, from: data)
         {
-            print("Widget loaded new data")
             return CamTimeEntry(
                 date: Date(),
                 targetDate: decoded.targetDate,
@@ -56,7 +56,7 @@ struct CamTimeProvider: TimelineProvider {
     }
 }
 
-// MARK: - Widget View
+// MARK: - Widget View (iOS 16)
 
 struct CamTimeWidgetView: View {
     let entry: CamTimeEntry
@@ -67,7 +67,7 @@ struct CamTimeWidgetView: View {
             Text(entry.message)
                 .font(.system(size: 16, weight: .bold, design: .rounded))
                 .foregroundColor(.white.opacity(0.9))
-            
+
             Rectangle()
                 .fill(
                     LinearGradient(
@@ -109,27 +109,34 @@ struct CamTimeWidgetView: View {
             for: .widget
         )
     }
-
+    
     private var daysRemaining: Int {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let target = calendar.startOfDay(for: entry.targetDate)
 
+        let components = calendar.dateComponents(
+            [.day],
+            from: today,
+            to: target
+        )
 
-        let components = calendar.dateComponents([.day], from: today, to: target)
         return max(components.day ?? 0, 0)
     }
 }
 
 
-// MARK: - Widget
+// MARK: - Widget Definition
 
 @main
 struct CamTimeWidget: Widget {
     let kind = "CamTimeWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: CamTimeProvider()) { entry in
+        StaticConfiguration(
+            kind: kind,
+            provider: CamTimeProvider()
+        ) { entry in
             CamTimeWidgetView(entry: entry)
         }
         .configurationDisplayName("CamTime")

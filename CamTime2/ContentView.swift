@@ -287,12 +287,14 @@ func startFirebaseListener(
                 )
 
                 let defaults = UserDefaults(
-                    suiteName: "group.com.example.camtime2"
+                    suiteName: "group.com.florent.camtime2"
                 )
 
                 if let encoded = try? JSONEncoder().encode(shared) {
                     defaults?.set(encoded, forKey: "camtime_data")
-                    WidgetCenter.shared.reloadAllTimelines()
+                    WidgetCenter.shared.reloadTimelines(
+                                ofKind: "CamTimeWidget"
+                            )
                 }
             }
         }
