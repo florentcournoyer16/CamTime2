@@ -1,6 +1,7 @@
 import WidgetKit
 import SwiftUI
 
+
 // MARK: - Timeline Entry
 
 struct CamTimeEntry: TimelineEntry {
@@ -8,6 +9,7 @@ struct CamTimeEntry: TimelineEntry {
     let targetDate: Date
     let message: String
 }
+
 
 // MARK: - Provider
 
@@ -39,7 +41,7 @@ struct CamTimeProvider: TimelineProvider {
 
         if
             let data = defaults?.data(forKey: "camtime_data"),
-            let decoded = try? JSONDecoder().decode(CamSharedData.self, from: data)
+            let decoded = try? JSONDecoder().decode(CamTimeData.self, from: data)
         {
             return CamTimeEntry(
                 date: Date(),
@@ -56,7 +58,8 @@ struct CamTimeProvider: TimelineProvider {
     }
 }
 
-// MARK: - Widget View (iOS 16)
+
+// MARK: - Widget View (iOS 26)
 
 struct CamTimeWidgetView: View {
     let entry: CamTimeEntry
@@ -91,8 +94,8 @@ struct CamTimeWidgetView: View {
                 .font(.system(size: 18, weight: .bold, design: .rounded))
                 .foregroundColor(.white.opacity(0.9))
 
-            Text("until we meet again")
-                .font(.system(size: 12, weight: .regular, design: .rounded))
+            Text("until we meet")
+                .font(.system(size: 14, weight: .regular, design: .rounded))
                 .foregroundColor(.white.opacity(0.9))
                 .multilineTextAlignment(.center)
         }

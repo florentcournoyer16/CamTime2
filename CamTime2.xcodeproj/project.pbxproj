@@ -43,46 +43,60 @@
 		7ADEBC8A2EF733E400948FAD /* CamWidget2Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CamWidget2Extension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		7ADEBC8C2EF733E400948FAD /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		7ADEBC8E2EF733E400948FAD /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		7ADEBCA62EF73D7000948FAD /* CamWidget2Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CamWidget2Extension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		7ADEBC9B2EF733E600948FAD /* Exceptions for "CamWidget2" folder in "CamWidget2Extension" target */ = {
+		7ADEBC9B2EF733E600948FAD /* Exceptions for "Widget" folder in "CamWidget2Extension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = 7ADEBC892EF733E400948FAD /* CamWidget2Extension */;
 		};
-		7ADEBCB12EF788E700948FAD /* Exceptions for "Shared" folder in "CamWidget2Extension" target */ = {
+		7ADEBCB12EF788E700948FAD /* Exceptions for "Models" folder in "CamWidget2Extension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				CamData.swift,
+				CamTimeData.swift,
 			);
 			target = 7ADEBC892EF733E400948FAD /* CamWidget2Extension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		7ADEBC772EF7335E00948FAD /* CamTime2 */ = {
+		7ADEBC772EF7335E00948FAD /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = CamTime2;
+			path = App;
 			sourceTree = "<group>";
 		};
-		7ADEBC902EF733E400948FAD /* CamWidget2 */ = {
+		7ADEBC902EF733E400948FAD /* Widget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				7ADEBC9B2EF733E600948FAD /* Exceptions for "CamWidget2" folder in "CamWidget2Extension" target */,
+				7ADEBC9B2EF733E600948FAD /* Exceptions for "Widget" folder in "CamWidget2Extension" target */,
 			);
-			path = CamWidget2;
+			path = Widget;
 			sourceTree = "<group>";
 		};
-		7ADEBCAC2EF7880300948FAD /* Shared */ = {
+		7ADEBCAC2EF7880300948FAD /* Models */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				7ADEBCB12EF788E700948FAD /* Exceptions for "Shared" folder in "CamWidget2Extension" target */,
+				7ADEBCB12EF788E700948FAD /* Exceptions for "Models" folder in "CamWidget2Extension" target */,
 			);
-			path = Shared;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A893ED512F1FDBCA00603E69 /* Services */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A893ED522F1FDBE600603E69 /* Views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A893ED532F1FDC4500603E69 /* ViewModels */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -112,10 +126,12 @@
 		7ADEBC6C2EF7335E00948FAD = {
 			isa = PBXGroup;
 			children = (
-				7ADEBCAC2EF7880300948FAD /* Shared */,
-				7ADEBCA62EF73D7000948FAD /* CamWidget2Extension.entitlements */,
-				7ADEBC772EF7335E00948FAD /* CamTime2 */,
-				7ADEBC902EF733E400948FAD /* CamWidget2 */,
+				A893ED532F1FDC4500603E69 /* ViewModels */,
+				A893ED522F1FDBE600603E69 /* Views */,
+				A893ED512F1FDBCA00603E69 /* Services */,
+				7ADEBCAC2EF7880300948FAD /* Models */,
+				7ADEBC772EF7335E00948FAD /* App */,
+				7ADEBC902EF733E400948FAD /* Widget */,
 				7ADEBC8B2EF733E400948FAD /* Frameworks */,
 				7ADEBC762EF7335E00948FAD /* Products */,
 			);
@@ -157,8 +173,11 @@
 				7ADEBC992EF733E600948FAD /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				7ADEBC772EF7335E00948FAD /* CamTime2 */,
-				7ADEBCAC2EF7880300948FAD /* Shared */,
+				7ADEBC772EF7335E00948FAD /* App */,
+				7ADEBCAC2EF7880300948FAD /* Models */,
+				A893ED512F1FDBCA00603E69 /* Services */,
+				A893ED522F1FDBE600603E69 /* Views */,
+				A893ED532F1FDC4500603E69 /* ViewModels */,
 			);
 			name = CamTime2;
 			packageProductDependencies = (
@@ -182,7 +201,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				7ADEBC902EF733E400948FAD /* CamWidget2 */,
+				7ADEBC902EF733E400948FAD /* Widget */,
 			);
 			name = CamWidget2Extension;
 			packageProductDependencies = (
@@ -332,6 +351,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -391,6 +411,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -404,7 +425,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = CamTime2/CamTime2.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App/CamTime2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X6PGRF9UA8;
@@ -441,7 +462,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = CamTime2/CamTime2.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App/CamTime2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X6PGRF9UA8;
@@ -477,12 +498,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = CamWidget2Extension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Widget/CamWidget2Extension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X6PGRF9UA8;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CamWidget2/Info.plist;
+				INFOPLIST_FILE = Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CamWidget2;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -509,12 +530,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = CamWidget2Extension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Widget/CamWidget2Extension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X6PGRF9UA8;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CamWidget2/Info.plist;
+				INFOPLIST_FILE = Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CamWidget2;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
