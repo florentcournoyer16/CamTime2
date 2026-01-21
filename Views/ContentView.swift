@@ -58,7 +58,7 @@ struct ContentView: View {
             }
             .disabled(!viewModel.canSendResponse)
 
-            Button("Force refresh") {
+            Button("Force refresh widget") {
                 viewModel.forceRefresh()
             }
             .disabled(viewModel.isFetching)

@@ -56,7 +56,9 @@
 		7ADEBCB12EF788E700948FAD /* Exceptions for "Models" folder in "CamWidget2Extension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Activity.swift,
 				CamTimeData.swift,
+				CamTimeStyle.swift,
 			);
 			target = 7ADEBC892EF733E400948FAD /* CamWidget2Extension */;
 		};

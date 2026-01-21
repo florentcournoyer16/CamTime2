@@ -19,7 +19,7 @@ struct CamTimeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootTabView()
         }
     }
 }
